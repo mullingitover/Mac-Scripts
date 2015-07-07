@@ -3,7 +3,7 @@
 # AUTHOR: JONATHAN SCHWENN @JONSCHWENN      #
 # MAC MINI VAULT - MAC MINI COLOCATION      #
 # MACMINIVAULT.COM - @MACMINIVAULT          #
-# VERSION 2.00 RELEASE DATE JAN 10, 2014    #
+# VERSION 2.50 RELEASE DATE OCT 28, 2014    #
 # DESC:  THIS SCRIPT SETS UP A VPN SERVER   #
 #        THAT PLACES VPN CLIENTS IN A LOCAL #
 #        VLAN, ALLOWING CLIENTS TO ROUTE    #
@@ -11,7 +11,7 @@
 #        ONLY USING THE SINGLE PUBLIC IP    #
 #############################################
 #REQUIREMENTS:
-#  OS X 10.8 or OS X 10.9.1 w/SERVER.APP 3.0.2
+#  OS X 10.8 or OS X 10.9.1 w/SERVER.APP 3.0.2 or OS X 10.10
 #  SERVER.APP INSTALLED / INITIALIZED
 #  NO VLANS CONFIGURED
 #  THIS SCRIPT WILL BACKUP AND REPLACE DNS AND FIREWALL CONFIGS
@@ -24,7 +24,10 @@ OSX=yes
 fi
 if [[  $(sw_vers -productVersion | grep '10.9') && $(serverinfo --configured | grep 'has') && $(serverinfo --shortversion | grep -v '3.0.1') ]]
 then
-#10.9 testing enabled
+OSX=yes
+fi
+if [[  $(sw_vers -productVersion | grep '10.10') && $(serverinfo --configured | grep 'has')  ]]
+then
 OSX=yes
 fi
 
@@ -34,7 +37,7 @@ echo "Congratulations, you are running OS X and have Server.app installed...."
 #CHECK IF SCRIPT HAS BEEN RUN BEFORE
 if [ -e /etc/vpn_MMV ]; then
 echo "SCRIPT CAN NOT BE RUN MORE THAN ONCE."
-exit 1 
+exit 1
 else
 #CREATE TEST FILE TO ENSURE SCRIPT IS NOT EXECUTED MULTIPLE TIMES
 sudo touch /etc/vpn_MMV
@@ -64,7 +67,7 @@ options {
                 none;
         };
         forwarders {
-               $RESOLVERS               
+               $RESOLVERS
         };
 };
 controls {
@@ -119,14 +122,14 @@ sudo sed -i -e 's/^rdr-anchor "100.I/#rdr-anchor "100.I/' /etc/pf.anchors/com.ap
 sudo sed -i -e 's/^anchor "100.I/#anchor "100.I/' /etc/pf.anchors/com.apple
 #FIX APPLE TYPO FOR ADAPTIVE FIREWALL - APPLE KB TS4418
 sudo sed -i -e 's/^load anchor "400.AdaptiveFirewall\//load anchor "400.AdaptiveFirewall/' /etc/pf.anchors/com.apple
-sudo sed  -i -e '/^#anchor "100.I/  a\ 
+sudo sed  -i -e '/^#anchor "100.I/  a\
 nat-anchor "100.customNATRules/*"\
 rdr-anchor "100.customNATRules/*"\
 load anchor "100.customNATRules" from "/etc/pf.anchors/customNATRules"
-'  /etc/pf.anchors/com.apple 
+'  /etc/pf.anchors/com.apple
 #SET PERMS BACK
 sudo chmod 644 /etc/pf.anchors/com.apple
-elif [[  $(sw_vers -productVersion | grep '10.9')   ]]
+elif [[  $(sw_vers -productVersion | grep '[10.9|10.10]')   ]]
 then
 #START FIREWALL SETTINGS
 #SETTING PERMS FOR EDITING - WILL SET PERMS BACK
@@ -136,7 +139,7 @@ sudo sed  -i -e '8i\
 nat-anchor "100.customNATRules/*"\
 rdr-anchor "100.customNATRules/*"\
 load anchor "100.customNATRules" from "/etc/pf.anchors/customNATRules"
-'  /etc/pf.anchors/com.apple 
+'  /etc/pf.anchors/com.apple
 #SET PERMS BACK
 sudo chmod 644 /etc/pf.anchors/com.apple
 fi

@@ -21,11 +21,12 @@ This script was developed and tested by the staff of Mac Mini Vault, we colocate
 + Prompts for and sets the VPN passphrase 
 
 #INSTALLATION
-**Before installation: Make sure you have OS X 10.8/10.9, Sever.app installed and initialized, no VLANs configured, and a un-customized firewall configuration.**
+**Before installation: Make sure you have OS X 10.8/10.9/10.10, Sever.app installed and initialized, no VLANs configured, and a un-customized firewall configuration.**
 
 + Open Terminal and run the following command
 
         bash <(curl -Ls http://git.io/1UlbJQ)
+:exclamation: [**Security Notice**](https://github.com/MacMiniVault/Mac-Scripts#readme)
 
 + Enter in your password and a passphrase when prompted, reboot when finished
 + When machine reboots, turn off VPN for a minute, then turn it back on
@@ -33,3 +34,4 @@ This script was developed and tested by the staff of Mac Mini Vault, we colocate
 
 #NOTES
 + Using this script on Mavericks works if system is on 10.9.1 and Server.app 3.0.2 or greater and the VPN update patch from Apple has been applied.
++ You can easily lock down OS X 10.10 Server without any additional 3rd party firewall software. Allow access via VPN and allow VNC access only to local networks, etc.

@@ -1,17 +1,49 @@
 #!/bin/bash
-# MAKES SURE WE ARE AT LEAST RUNNING 10.6 OR NEWER
-if [[  $(sw_vers -productVersion | grep '10.[6-9]') ]]
+#############################################
+# AUTHOR: JONATHAN SCHWENN @JONSCHWENN      #
+# MAC MINI VAULT - MAC MINI COLOCATION      #
+# MACMINIVAULT.COM - @MACMINIVAULT          #
+# VERSION 2.0  RELEASE DATE OCT 1 2014      #
+# DESC:  DISABLES BONJOUR ADVERTISING       #
+#############################################
+#REQUIREMENTS:
+#  OS X 10.6 or newer
+#############################################
+
+if [[  $(sw_vers) ]]
 then
-# CHECKS FOR FLAG IN CURRENT PLIST FILE
-if [[ $(sudo /usr/libexec/PlistBuddy -c Print /System/Library/LaunchDaemons/com.apple.mDNSResponder.plist | grep 'NoMulticast') ]]
-then
-echo "SORRY, MULTICAST IS ALREADY DISABLED"
+	# MAKES SURE WE ARE RUNNING 10.6 -> 10.9 or 10.10.4+
+	if [[  $(sw_vers -productVersion | grep '10.[6-9]') ]] || [[  $(sw_vers -productVersion | grep '10.10.4') ]]
+	then
+		# CHECKS FOR FLAG IN CURRENT PLIST FILE
+		if [[ $(sudo /usr/libexec/PlistBuddy -c Print /System/Library/LaunchDaemons/com.apple.mDNSResponder.plist | grep 'NoMulticast') ]]
+		then
+			echo "MULTICAST DISABLED, NO CHANGES MADE"
+		else
+			sudo /usr/libexec/PlistBuddy -c "Add :ProgramArguments: string -NoMulticastAdvertisements" /System/Library/LaunchDaemons/com.apple.mDNSResponder.plist
+			echo "MULTICAST DISABLED (OS X 10.6-10.9 or 10.10.4+), PLEASE REBOOT"
+		fi
+		exit
+	else
+	echo  "OS X 10.6 - 10.9 or 10.10.4+ NOT DETECTED, NO CHANGES HAVE BEEN MADE YET"
+	echo  "CHECKING FOR OS X 10.10.0 to 10.10.3 ..."
+		if [[  $(sw_vers -productVersion | grep '10.10[.0-3]') ]]
+        	then
+                	# CHECKS FOR FLAG IN CURRENT PLIST FILE
+			if [[ $(sudo /usr/libexec/PlistBuddy -c Print /System/Library/LaunchDaemons/com.apple.discoveryd.plist | grep 'no-multicast') ]]
+	                then
+				echo "MULTICAST DISABLED, NO CHANGES MADE"
+                	else
+                        	sudo /usr/libexec/PlistBuddy -c "Add :ProgramArguments: string --no-multicast" /System/Library/LaunchDaemons/com.apple.discoveryd.plist
+                        	echo "MULTICAST DISABLED (OSX 10.10), PLEASE REBOOT"
+                	fi
+                	exit
+		else
+		echo "OS X 10.10 NOT DETECTED, NO CHANGES HAVE BEEN MADE"
+		fi
+	fi
+
 else
-sudo /usr/libexec/PlistBuddy -c "Add :ProgramArguments: string -NoMulticastAdvertisements" /System/Library/LaunchDaemons/com.apple.mDNSResponder.plist
-echo "PLEASE REBOOT"
-fi
-exit
-else
-echo "SORRY, THIS IS ONLY FOR OS X 10.6 OR NEWER"
+echo "SORRY, OS X NOT DETECTED - NO CHANGES MADE"
 fi
 exit

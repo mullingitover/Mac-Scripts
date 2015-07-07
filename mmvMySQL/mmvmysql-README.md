@@ -1,3 +1,6 @@
+#YOSMITE OS X 10.10 NOTE:
+[BE SURE TO READ THIS!!!](https://github.com/MacMiniVault/Mac-Scripts/blob/master/mmvMySQL/mmvmysql-Yosemite.md)
+
 #READ ME FOR MMV MySQL SCRIPT
 ===========
 
@@ -16,9 +19,10 @@ MySQL is not installed by default on OS X 10.7 or newer.  This script will fix t
 + Open Terminal and run the following command
 
         bash <(curl -Ls http://git.io/eUx7rg)
+:exclamation: [**Security Notice**](https://github.com/MacMiniVault/Mac-Scripts#readme)
 
 + Enter in your system password when prompted
-+ The script will install MySQL, generate a root password and display it along with writing a file to the dekstop including the password.
++ The script will install MySQL, generate a root password and display it along with writing a file to the desktop including the password.
 + Click to install the MySQL preference pane when prompted.
 + Close your terminal and open a new terminal to access MySQL via command line
 + Install [Sequel Pro](http://www.sequelpro.com/) or phpmyadmin to manage MySQL
@@ -32,3 +36,4 @@ This script will restart MySQL, reset the password, and then restart it again
 This script creates a modified my.cnf file named mmv.cnf.  The performance settings will not be perfect for every MySQL server.  The intention was to give a small performance boost in a generic way.  This script gives the option to copy over the mmv.cnf file to /etc/my.cnf and restart MySQL.  We encourage you to further tune your MySQL server after it is running for awhile.  You can do so by running this command in your terminal and it will display stats and recommendations. (Credit Major Hayden for MySQLTuner)
 
 	perl <(curl -Ls https://raw.github.com/major/MySQLTuner-perl/master/mysqltuner.pl)
+
